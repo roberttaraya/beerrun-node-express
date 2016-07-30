@@ -1,0 +1,28 @@
+{
+  "name": "beerrun-server-node-express",
+  "version": "1.0.0",
+  "description": "This is the backend for BeerRun.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roberttaraya/beerrun-server-node-express.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/roberttaraya/beerrun-server-node-express/issues"
+  },
+  "homepage": "https://github.com/roberttaraya/beerrun-server-node-express#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "node-env-file": "^0.1.8",
+    "request": "^2.74.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.10.0"
+  }
+}
