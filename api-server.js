@@ -3,6 +3,11 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var env = require('node-env-file');
+
+env(__dirname + '/.env');
+
+var BREWERYDB_API_KEY = process.env.BREWERYDB_API_KEY
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -55,6 +60,37 @@ app.put('/users/:user_id/orders/:order_id', function(req, res){
 app.delete('/users/:user_id/orders/:order_id', function(req, res){
   res.send('Deletes an order');
 });
+
+
+// use BreweryDB api to get list of beers
+app.get('/beers', function(req, res) {
+  var request = require("request");
+
+  var options = {
+    method: 'GET',
+    url: 'http://api.brewerydb.com/v2/beers',
+    json: true,
+    qs: {
+      key: BREWERYDB_API_KEY,
+      abv: '+20'
+      // styleId: "134"
+    }
+  };
+
+  request(options, function (error, response, body) {
+    // if (error) throw new Error(error);
+    if (error) console.log(error);
+    var data = body.data.map(function(beer) {
+      return {
+        "name": beer.name,
+        "desc": beer.description,
+        "styleId": beer.styleId
+      }
+    });
+    console.log("number of beers in list: " + data.length)
+    res.send(data);
+  });
+})
 
 
 app.listen(3000, function(){
