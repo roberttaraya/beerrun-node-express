@@ -54,11 +54,6 @@ var Order = (function() {
   }
 
   return {
-    newOrder: function newOrder(req, callback) {
-      var order =  {};
-      return callback(null, order);
-    },
-
     create: function create(req, callback) {
       var orders = getAllOrders();
       var order = createOrder();
