@@ -6,8 +6,12 @@ var bodyParser = require('body-parser');
 var env = require('node-env-file');
 
 env(__dirname + '/.env');
+  var BREWERYDB_API_KEY = process.env.BREWERYDB_API_KEY
 
-var BREWERYDB_API_KEY = process.env.BREWERYDB_API_KEY
+
+var ordersController = require('./controllers/orders.controllers');
+var beersController = require('./controllers/beers.controllers');
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -15,81 +19,58 @@ app.use(bodyParser.json());
 
 // home page
 // GET '/'
-app.get('/', function(req, res){
+app.get('/', function(req, res) {
   res.send('Welcome to the BeerRun home page');
 });
 
 // orders#index
-// GET '/users/:user_id/orders'
-app.get('/users/:user_id/orders/', function(req, res){
-  res.send('Returns list of orders');
+// GET '/users/:userId/orders'
+app.get('/users/:userId/orders/', function(req, res) {
+  ordersController.listAllOrders(req, res);
 });
 
 // orders#new
-// GET '/users/:user_id/orders/new'
-app.get('/users/:user_id/orders/new', function(req, res){
-  res.send('New order page: New order form');
+// GET '/users/:userId/orders/new'
+app.get('/users/:userId/orders/new', function(req, res) {
+  ordersController.newOrder(req, res);
 });
 
 // orders#create
-// POST '/users/:user_id/orders'
-app.post('/users/:user_id/orders', function(req, res){
-  res.send('Create a new order. User id: ' + req.body.shoe );
+// POST '/users/:userId/orders'
+app.post('/users/:userId/orders', function(req, res) {
+  // res.send(req.body)
+  ordersController.createOrder(req, res);
 });
 
 // orders#show
-// GET '/users/:user_id/orders/:order_id'
-app.get('/users/:user_id/orders/:order_id', function(req, res){
-  res.send('Shows details for an order');
+// GET '/users/:userId/orders/:orderId'
+app.get('/users/:userId/orders/:orderId', function(req, res) {
+  // res.send('Shows details for an order');
+  ordersController.showOrder(req, res);
 });
 
 // orders#edit
-// GET '/users/:user_id/orders/:order_id/edit'
-app.get('/users/:user_id/orders/:order_id/edit', function(req, res){
-  res.send('Edit order page: edit order form');
+// GET '/users/:userId/orders/:orderId/edit'
+app.get('/users/:userId/orders/:orderId/edit', function(req, res) {
+  ordersController.editOrder(req, res);
 });
 
 // orders#update
-// PATCH/PUT '/users/:user_id/orders/:order_id'
-app.put('/users/:user_id/orders/:order_id', function(req, res){
-  res.send('Update an order');
+// PATCH/PUT '/users/:userId/orders/:orderId'
+app.put('/users/:userId/orders/:orderId', function(req, res) {
+  ordersController.updateOrder(req, res);
 });
 
 // orders#destroy
-// DELETE '/users/:user_id/orders/:order_id'
-app.delete('/users/:user_id/orders/:order_id', function(req, res){
-  res.send('Deletes an order');
+// DELETE '/users/:userId/orders/:orderId'
+app.delete('/users/:userId/orders/:orderId', function(req, res) {
+  ordersController.destroyOrder(req, res);
 });
 
 
 // use BreweryDB api to get list of beers
 app.get('/beers', function(req, res) {
-  var request = require("request");
-
-  var options = {
-    method: 'GET',
-    url: 'http://api.brewerydb.com/v2/beers',
-    json: true,
-    qs: {
-      key: BREWERYDB_API_KEY,
-      abv: '+20'
-      // styleId: "134"
-    }
-  };
-
-  request(options, function (error, response, body) {
-    // if (error) throw new Error(error);
-    if (error) console.log(error);
-    var data = body.data.map(function(beer) {
-      return {
-        "name": beer.name,
-        "desc": beer.description,
-        "styleId": beer.styleId
-      }
-    });
-    console.log("number of beers in list: " + data.length)
-    res.send(data);
-  });
+  beersController.listAllBeers(req, res);
 })
 
 
